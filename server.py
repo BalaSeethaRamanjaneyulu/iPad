@@ -5,7 +5,16 @@ import subprocess
 import os
 
 app = Flask(__name__)
-CORS(app) # Enable CORS for iPad-to-Mac communication
+CORS(app, resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+
+# Add explicit CORS headers for iOS 9 Safari compatibility
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    return response
 
 def run_applescript(script):
     try:
