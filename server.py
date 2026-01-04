@@ -64,7 +64,10 @@ def system_control(action):
         'mute': 'set volume output muted not (output muted of (get volume settings))',
         'vol_up': 'set volume output volume (output volume of (get volume settings) + 10)',
         'vol_down': 'set volume output volume (output volume of (get volume settings) - 10)',
-        'empty_trash': 'tell application "Finder" to empty trash'
+        'empty_trash': 'tell application "Finder" to empty trash',
+        'brightness_up': 'tell application "System Events" to key code 144',
+        'brightness_down': 'tell application "System Events" to key code 145',
+        'minimize_all': 'tell application "System Events" to keystroke "m" using {command down, option down}'
     }
     
     if action in commands:
