@@ -147,6 +147,18 @@
             </div>
         </div>
 
+        <!-- Microphone -->
+        <div class="card">
+            <h3>Microphone Check</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">iOS 9 fallback (Audio Capture)</p>
+            <input type="file" id="mic-input" accept="audio/*" capture="microphone" style="display:none">
+            <button class="btn" onclick="document.getElementById('mic-input').click()">Record Audio</button>
+            <div id="mic-preview" style="margin-top: 10px;">
+                <audio id="audio-player" controls style="display:none; width: 100%;"></audio>
+                <div id="mic-status" style="font-size: 12px; color: var(--text-muted);">Record to verify mic</div>
+            </div>
+        </div>
+
         <!-- Camera -->
         <div class="card">
             <h3>Camera Check</h3>
@@ -201,6 +213,18 @@
                     preview.appendChild(img);
                 };
                 reader.readAsDataURL(file);
+            }
+        });
+
+        // Microphone Fallback Handling
+        document.getElementById('mic-input').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            if (file) {
+                var player = document.getElementById('audio-player');
+                var status = document.getElementById('mic-status');
+                player.src = URL.createObjectURL(file);
+                player.style.display = 'block';
+                status.innerText = "Recording loaded. Press play to verify.";
             }
         });
 

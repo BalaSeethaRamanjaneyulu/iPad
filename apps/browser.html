@@ -142,35 +142,91 @@
 </head>
 
 <body>
-    <div class="browser-toolbar">
-        <input type="text" id="url-input" placeholder="Enter URL (https://...)"
-            value="https://www.google.com/search?q=iPad+2+Smart+Home">
-        <button class="btn" onclick="loadUrl()">GO</button>
+    <div id="home-view" class="fade-in" style="padding: 20px;">
+        <h2 style="margin-bottom: 20px; font-weight: 200; color: #38bdf8;">Apps & Browser</h2>
+        <div class="app-grid">
+            <div class="app-tile" onclick="openInternalUrl('https://www.google.com')">
+                <div class="app-icon" style="background: #fff; color: #4285F4;">G</div>
+                <div class="app-name">Google</div>
+            </div>
+            <div class="app-tile" onclick="openInternalUrl('https://m.youtube.com')">
+                <div class="app-icon" style="background: #f00;">Y</div>
+                <div class="app-name">YouTube</div>
+            </div>
+            <div class="app-tile" onclick="openInternalUrl('https://m.facebook.com')">
+                <div class="app-icon" style="background: #1877f2;">F</div>
+                <div class="app-name">Facebook</div>
+            </div>
+            <div class="app-tile" onclick="openInternalUrl('https://news.google.com')">
+                <div class="app-icon" style="background: #34a853;">N</div>
+                <div class="app-name">News</div>
+            </div>
+            <div class="app-tile"
+                onclick="window.parent.loadApp('video', document.querySelector('.nav-item[title=Video]'))">
+                <div class="app-icon" style="background: #f8fafc; color: #000;">🎬</div>
+                <div class="app-name">Video Player</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; width: 100%; max-width: 500px;">
+            <p style="color: #94a3b8; font-size: 14px; margin-bottom: 10px;">Or enter any web address:</p>
+            <div class="browser-toolbar" style="margin-bottom: 0;">
+                <input type="text" id="url-input" placeholder="https://..." value="">
+                <button class="btn" onclick="loadUrlFromInput()">GO</button>
+            </div>
+        </div>
     </div>
 
-    <div class="browser-content">
-        <iframe id="browser-viewport" src="about:blank"></iframe>
+    <div id="browser-view" style="display: none; height: 100%; flex-direction: column; padding: 10px;">
+        <div class="browser-toolbar">
+            <button class="btn" onclick="showHome()"
+                style="margin-left: 0; margin-right: 10px; background: #94a3b8;">🏠</button>
+            <input type="text" id="current-url" readonly
+                style="-webkit-box-flex: 1; -webkit-flex: 1; flex: 1; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); color: #94a3b8; padding: 8px; border-radius: 8px; font-size: 12px;">
+            <button class="btn" onclick="openExternal()" title="Full Page">↗️</button>
+        </div>
+        <div class="browser-content"
+            style="background: #fff; border-radius: 12px; overflow: hidden; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;">
+            <iframe id="browser-viewport" name="browser-viewport" src="about:blank"
+                style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
     </div>
 
     <script>
-        function loadUrl() {
-            var url = document.getElementById('url-input').value;
+        var browserView = document.getElementById('browser-view');
+        var homeView = document.getElementById('home-view');
+        var viewport = document.getElementById('browser-viewport');
+        var urlInput = document.getElementById('url-input');
+
+        function openInternalUrl(url) {
+            homeView.style.display = 'none';
+            browserView.style.display = 'flex';
+            document.getElementById('current-url').value = url;
+            viewport.src = url;
+        }
+
+        function loadUrlFromInput() {
+            var url = urlInput.value;
+            if (!url) return;
             if (!url.match(/^https?:\/\//i)) {
                 url = 'http://' + url;
             }
-            document.getElementById('browser-viewport').src = url;
+            openInternalUrl(url);
         }
 
-        // Initial load
-        window.onload = function () {
-            loadUrl();
-        };
+        function showHome() {
+            browserView.style.display = 'none';
+            homeView.style.display = 'block';
+            viewport.src = 'about:blank';
+        }
 
-        // Handle enter key
-        document.getElementById('url-input').onkeypress = function (e) {
-            if (e.keyCode == 13) {
-                loadUrl();
-            }
+        function openExternal() {
+            var url = document.getElementById('current-url').value;
+            window.open(url, '_blank');
+        }
+
+        urlInput.onkeypress = function (e) {
+            if (e.keyCode == 13) loadUrlFromInput();
         };
     </script>
 </body>
