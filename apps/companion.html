@@ -197,6 +197,9 @@
         <div class="header">
             <h2 style="margin: 0; color: var(--accent-primary); font-weight: 200;">Mac Companion</h2>
             <p id="conn-status" style="font-size: 12px; color: #34a853;">● Connected to MacBook</p>
+            <button onclick="resetConnection()"
+                style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; padding: 8px 15px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-top: 10px;">⚙️
+                Change Mac IP</button>
         </div>
 
         <div class="section-title">SYSTEM VITALS</div>
@@ -296,6 +299,11 @@
             }
             setInterval(update, 2000);
             update();
+        }
+
+        function resetConnection() {
+            localStorage.removeItem('mac_companion_ip');
+            location.reload();
         }
 
         if (macIP) init();
