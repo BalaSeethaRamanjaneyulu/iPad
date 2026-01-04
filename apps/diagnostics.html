@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hardware Diagnostics</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-primary: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            background: transparent;
+            /* Parent handles background */
+            color: var(--text-main);
+            padding: 20px;
+            margin: 0;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px;
+            width: 300px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--accent-primary);
+            font-size: 18px;
+        }
+
+        .data-point {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .label {
+            color: var(--text-muted);
+        }
+
+        .value {
+            color: var(--text-main);
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .btn {
+            background: var(--accent-primary);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #camera-preview {
+            width: 100%;
+            height: 150px;
+            background: #000;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            color: var(--text-muted);
+            overflow: hidden;
+        }
+
+        #camera-preview img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .screen-test-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Hardware Diagnostics</h1>
+        <p>Testing sensors and components of iPad 2 (A1395)</p>
+    </div>
+
+    <div class="grid">
+        <!-- Accelerometer -->
+        <div class="card">
+            <h3>3-Axis Accelerometer</h3>
+            <div class="data-point"><span class="label">X:</span> <span id="acc-x" class="value">0.00</span></div>
+            <div class="data-point"><span class="label">Y:</span> <span id="acc-y" class="value">0.00</span></div>
+            <div class="data-point"><span class="label">Z:</span> <span id="acc-z" class="value">0.00</span></div>
+        </div>
+
+        <!-- Gyroscope -->
+        <div class="card">
+            <h3>3-Axis Gyroscope</h3>
+            <div class="data-point"><span class="label">Alpha:</span> <span id="gyro-a" class="value">0.00</span></div>
+            <div class="data-point"><span class="label">Beta:</span> <span id="gyro-b" class="value">0.00</span></div>
+            <div class="data-point"><span class="label">Gamma:</span> <span id="gyro-g" class="value">0.00</span></div>
+        </div>
+
+        <!-- Compass -->
+        <div class="card">
+            <h3>Digital Compass</h3>
+            <div class="data-point"><span class="label">Heading:</span> <span id="compass-h" class="value">0°</span>
+            </div>
+            <div class="data-point"><span class="label">Accuracy:</span> <span id="compass-acc" class="value">0°</span>
+            </div>
+        </div>
+
+        <!-- Camera -->
+        <div class="card">
+            <h3>Camera Check</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">iOS 9 fallback (Snapshot mode)</p>
+            <input type="file" id="camera-input" accept="image/*" capture="camera" style="display:none">
+            <button class="btn" onclick="document.getElementById('camera-input').click()">Launch Camera</button>
+            <div id="camera-preview">Image preveiw will appear here</div>
+        </div>
+
+        <!-- Screen Test -->
+        <div class="card">
+            <h3>Screen Test</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Check for dead pixels</p>
+            <button class="btn" onclick="runScreenTest()">Start Color Cycle</button>
+        </div>
+    </div>
+
+    <div id="test-overlay" class="screen-test-overlay" onclick="stopScreenTest()"></div>
+
+    <script>
+        // Sensor Data Readouts
+        window.addEventListener('devicemotion', function (event) {
+            if (event.accelerationIncludingGravity) {
+                document.getElementById('acc-x').innerText = event.accelerationIncludingGravity.x.toFixed(2);
+                document.getElementById('acc-y').innerText = event.accelerationIncludingGravity.y.toFixed(2);
+                document.getElementById('acc-z').innerText = event.accelerationIncludingGravity.z.toFixed(2);
+            }
+        });
+
+        window.addEventListener('deviceorientation', function (event) {
+            document.getElementById('gyro-a').innerText = event.alpha ? event.alpha.toFixed(2) : "N/A";
+            document.getElementById('gyro-b').innerText = event.beta ? event.beta.toFixed(2) : "N/A";
+            document.getElementById('gyro-g').innerText = event.gamma ? event.gamma.toFixed(2) : "N/A";
+
+            // Webkit specific compass heading
+            if (event.webkitCompassHeading) {
+                document.getElementById('compass-h').innerText = Math.round(event.webkitCompassHeading) + "°";
+                document.getElementById('compass-acc').innerText = event.webkitCompassAccuracy + "°";
+            }
+        });
+
+        // Camera Fallback Handling
+        document.getElementById('camera-input').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var img = document.createElement('img');
+                    img.src = event.target.result;
+                    var preview = document.getElementById('camera-preview');
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Screen Color Test
+        var colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#000000'];
+        var colorIdx = 0;
+        var testInterval;
+
+        function runScreenTest() {
+            var overlay = document.getElementById('test-overlay');
+            overlay.style.display = 'block';
+            overlay.style.backgroundColor = colors[0];
+            colorIdx = 1;
+
+            testInterval = setInterval(function () {
+                overlay.style.backgroundColor = colors[colorIdx];
+                colorIdx = (colorIdx + 1) % colors.length;
+            }, 2000);
+        }
+
+        function stopScreenTest() {
+            clearInterval(testInterval);
+            document.getElementById('test-overlay').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

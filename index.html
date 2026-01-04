@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>iPad 2 Premium Hub</title>
+    <!-- We avoid Google Fonts for now to ensure offline functionality works better and to avoid loading issues on legacy TLS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar">
+            <div class="nav-item active" onclick="loadApp('clock', this)" title="Clock">
+                <span>🕒</span>
+            </div>
+            <div class="nav-item" onclick="loadApp('weather', this)" title="Weather">
+                <span>🌤️</span>
+            </div>
+            <div class="nav-item" onclick="loadApp('diagnostics', this)" title="Diagnostics">
+                <span>🛠️</span>
+            </div>
+            <div class="nav-item" onclick="loadApp('browser', this)" title="Browser">
+                <span>🌐</span>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="content" class="fade-in">
+            <iframe id="app-viewport" src="apps/clock.html"></iframe>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

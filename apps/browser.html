@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hub Browser</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: transparent;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .browser-toolbar {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            background: rgba(30, 41, 59, 0.7);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #url-input {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn {
+            background: #38bdf8;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .browser-content {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="browser-toolbar">
+        <input type="text" id="url-input" placeholder="Enter URL (https://...)"
+            value="https://www.google.com/search?q=iPad+2+Smart+Home">
+        <button class="btn" onclick="loadUrl()">GO</button>
+    </div>
+
+    <div class="browser-content">
+        <iframe id="browser-viewport" src="about:blank"></iframe>
+    </div>
+
+    <script>
+        function loadUrl() {
+            var url = document.getElementById('url-input').value;
+            if (!url.match(/^https?:\/\//i)) {
+                url = 'http://' + url;
+            }
+            document.getElementById('browser-viewport').src = url;
+        }
+
+        // Initial load
+        window.onload = function () {
+            loadUrl();
+        };
+
+        // Handle enter key
+        document.getElementById('url-input').onkeypress = function (e) {
+            if (e.keyCode == 13) {
+                loadUrl();
+            }
+        };
+    </script>
+</body>
+
+</html>

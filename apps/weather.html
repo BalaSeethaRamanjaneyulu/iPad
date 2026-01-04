@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Premium Weather</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: transparent;
+            color: #fff;
+            margin: 0;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .weather-container {
+            background: rgba(30, 41, 59, 0.4);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .temp {
+            font-size: 72px;
+            font-weight: 200;
+            margin: 0;
+        }
+
+        .desc {
+            font-size: 24px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-pack: justify;
+            -webkit-justify-content: space-between;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="weather-container">
+        <div class="icon">🌤️</div>
+        <h1 class="temp">24°C</h1>
+        <div class="desc">PARTLY CLOUDY</div>
+
+        <div class="details">
+            <div class="detail-item">
+                <div class="detail-label">Humidity</div>
+                <div class="detail-value">45%</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Wind</div>
+                <div class="detail-value">12 km/h</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">UV Index</div>
+                <div class="detail-value">Low</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // In a real app, you'd fetch from an API here.
+        // For iPad 2 compatibility, we'd use a server-side proxy
+        // to handle modern HTTPS/CORS requirements.
+    </script>
+</body>
+
+</html>
