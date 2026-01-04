@@ -61,12 +61,24 @@ def launch_app(app_name):
         'safari': 'Safari',
         'music': 'Music',
         'terminal': 'Terminal',
-        'finder': 'Finder'
+        'finder': 'Finder',
+        'photos': 'Photos',
+        'photobooth': 'Photo Booth',
+        'mail': 'Mail',
+        'messages': 'Messages',
+        'facetime': 'FaceTime',
+        'calendar': 'Calendar',
+        'notes': 'Notes',
+        'reminders': 'Reminders',
+        'maps': 'Maps',
+        'books': 'Books',
+        'podcasts': 'Podcasts',
+        'tv': 'TV'
     }
     if app_name in apps:
         subprocess.run(['open', '-a', apps[app_name]])
-        return jsonify({'status': 'ok'})
-    return jsonify({'status': 'error'}), 400
+        return jsonify({'status': 'ok', 'app': apps[app_name]})
+    return jsonify({'status': 'error', 'message': 'App not found'}), 400
 
 # NEW: Serve the entire iPad Hub locally
 from flask import send_from_directory
