@@ -1,49 +1,48 @@
-/* 
-   iPad 2 Smart Home Hub - Core Logic
-   Compatible with ES5 (iOS 9.3.5)
-*/
-
-var currentApp = 'clock';
-var viewport = document.getElementById('app-viewport');
-
 /**
- * Loads a micro-app into the main viewport
- * @param {string} appName - The name of the app to load
- * @param {HTMLElement} navElement - The clicked navigation element
+ * iPad Hub "Continuity" Controller
+ * Fully responsive logic for adaptive layouts
  */
-function loadApp(appName, navElement) {
-    if (currentApp === appName) return;
 
-    // Update active class in sidebar
-    var navItems = document.getElementsByClassName('nav-item');
-    for (var i = 0; i < navItems.length; i++) {
-        navItems[i].className = 'nav-item';
-    }
-    navElement.className = 'nav-item active';
-
-    // Update viewport
-    var appPath = 'apps/' + appName + '.html';
-    
-    // Special case for browser (we'll implement this later)
-    if (appName === 'browser') {
-        appPath = 'apps/browser.html';
-    }
-
-    viewport.src = appPath;
-    currentApp = appName;
-
-    // Add fade-in effect to the content area
-    var content = document.getElementById('content');
-    content.style.opacity = '0';
-    setTimeout(function() {
-        content.style.opacity = '1';
-    }, 50);
+function updateClock() {
+    var clock = document.getElementById('clock');
+    var now = new Date();
+    clock.innerText = now.toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
 }
 
-// Ensure the iframe fits perfectly
-window.addEventListener('resize', function() {
-    // iPad 2 is fixed 1024x768, but this helps during local dev testing
-    console.log('Viewport resized: ' + window.innerWidth + 'x' + window.innerHeight);
-});
+function openApp(slug, name) {
+    var winSystem = document.getElementById('window-system');
+    var iframe = document.getElementById('iframe');
+    var title = document.getElementById('win-title');
 
-console.log('Premium Hub Shell Initialized');
+    title.innerText = name;
+    iframe.src = 'apps/' + slug + '.html';
+
+    winSystem.style.display = 'flex';
+    setTimeout(function () {
+        winSystem.classList.add('active');
+    }, 10);
+}
+
+function closeApp() {
+    var winSystem = document.getElementById('window-system');
+    winSystem.classList.remove('active');
+    setTimeout(function () {
+        winSystem.style.display = 'none';
+        document.getElementById('iframe').src = '';
+    }, 400);
+}
+
+// Global Handlers
+setInterval(updateClock, 1000);
+updateClock();
+
+// Prevent iPad browser drag/bounce behaviors
+document.addEventListener('touchmove', function (e) {
+    if (e.target.id === 'desktop' || e.target.id === 'dock') {
+        e.preventDefault();
+    }
+}, { passive: false });

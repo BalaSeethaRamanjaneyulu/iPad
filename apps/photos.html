@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Photos</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: transparent;
+            font-family: -apple-system, sans-serif;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .frame-container {
+            width: 100%;
+            height: calc(100vh - 100px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            -webkit-transition: opacity 1.5s ease-in-out;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .photo.active {
+            opacity: 1;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="title">Photos</div>
+    </div>
+    <div class="frame-container" id="frame">
+        <div id="photo1" class="photo active"
+            style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=1024')">
+        </div>
+        <div id="photo2" class="photo"
+            style="background-image: url('https://images.unsplash.com/photo-1532274402911-5a3b95079414?auto=format&fit=crop&q=80&w=1024')">
+        </div>
+        <div id="photo3" class="photo"
+            style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=1024')">
+        </div>
+        <div id="photo4" class="photo"
+            style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1024')">
+        </div>
+
+        <div class="overlay">Digital Frame • Memories</div>
+    </div>
+
+    <script>
+        var current = 0;
+        var photos = document.querySelectorAll('.photo');
+
+        function nextPhoto() {
+            photos[current].classList.remove('active');
+            current = (current + 1) % photos.length;
+            photos[current].classList.add('active');
+        }
+
+        setInterval(nextPhoto, 10000); // Change every 10 seconds
+    </script>
+</body>
+
+</html>
