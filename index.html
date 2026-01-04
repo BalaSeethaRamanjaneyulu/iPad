@@ -272,13 +272,13 @@
 
     <!-- App Modal -->
     <div id="overlay" class="overlay" onclick="closeApp()"></div>
-    <div id="modal" class="modal glass">
-        <div class="p-4 border-b border-white/10 flex justify-between items-center">
+    <div id="modal" class="modal glass" style="display: none;">
+        <div class="p-4 border-b border-white/10 flex justify-between items-center flex-shrink-0">
             <h2 id="modal-title" class="text-xl font-bold">App</h2>
             <button onclick="closeApp()"
                 class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-medium transition">Done</button>
         </div>
-        <div style="height: calc(100% - 64px);">
+        <div class="modal-content">
             <iframe id="app-frame" src=""></iframe>
         </div>
     </div>
