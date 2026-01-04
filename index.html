@@ -6,29 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>iPad Hub</title>
+    <title>Mac Launcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --apple-glass: rgba(255, 255, 255, 0.4);
-            --apple-glass-dark: rgba(0, 0, 0, 0.3);
-            --apple-blur: 25px;
-        }
-
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: linear-gradient(135deg, #1d4ed8, #7e22ce, #be185d);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             color: white;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
         @keyframes gradientBG {
@@ -45,308 +38,119 @@
             }
         }
 
-        .glass {
-            background: var(--apple-glass);
-            backdrop-filter: blur(var(--apple-blur));
-            -webkit-backdrop-filter: blur(var(--apple-blur));
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .dark-glass {
-            background: var(--apple-glass-dark);
-            backdrop-filter: blur(var(--apple-blur));
-            -webkit-backdrop-filter: blur(var(--apple-blur));
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-bar {
-            height: 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 16px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .dock-container {
-            position: fixed;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border-radius: 20px;
-            z-index: 100;
-        }
-
-        .dock-item {
-            width: 54px;
-            height: 54px;
-            margin: 0 6px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .dock-item:active {
-            transform: scale(0.85);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .dock-item i {
-            font-size: 24px;
-        }
-
-        .action-card {
-            border-radius: 24px;
-            padding: 20px;
-            transition: transform 0.2s;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            aspect-ratio: 1/1;
-        }
-
-        .action-card:active {
-            transform: scale(0.96);
-        }
-
-        .status-pill {
+        .app-btn {
             background: rgba(255, 255, 255, 0.15);
-            padding: 4px 12px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            font-size: 12px;
-            margin-top: 8px;
-            width: fit-content;
-        }
-
-        #time {
-            font-weight: 600;
-        }
-
-        .icon-blue {
-            background: linear-gradient(180deg, #5AC8FA, #007AFF);
-        }
-
-        .icon-green {
-            background: linear-gradient(180deg, #4CD964, #28CD41);
-        }
-
-        .icon-orange {
-            background: linear-gradient(180deg, #FF9500, #FF5E3A);
-        }
-
-        .icon-red {
-            background: linear-gradient(180deg, #FF3B30, #FF2D55);
-        }
-
-        .icon-purple {
-            background: linear-gradient(180deg, #AF52DE, #8944AB);
-        }
-
-        .icon-gray {
-            background: linear-gradient(180deg, #8E8E93, #636366);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 95%;
-            max-width: 900px;
-            height: 90vh;
-            border-radius: 24px;
-            z-index: 1000;
-            overflow: hidden;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
-        .modal-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
+        .app-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.25);
         }
 
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 999;
+        .app-icon {
+            font-size: 48px;
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .app-name {
+            font-size: 16px;
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
+    <div class="p-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Mac App Launcher</h1>
 
-    <!-- Menu Bar -->
-    <div class="menu-bar dark-glass">
-        <div class="flex items-center space-x-4">
-            <i class="fab fa-apple text-lg"></i>
-            <span class="hidden sm:inline">Hub</span>
-        </div>
-        <div class="flex items-center space-x-4">
-            <i class="fas fa-wifi"></i>
-            <i class="fas fa-battery-full"></i>
-            <span id="date-display">Jan 4</span>
-            <span id="time">12:00 PM</span>
-        </div>
-    </div>
+        <div class="grid grid-cols-3 md:grid-cols-4 gap-6">
+            <div class="app-btn" onclick="launch('safari')">
+                <div class="app-icon">🌐</div>
+                <div class="app-name">Safari</div>
+            </div>
 
-    <!-- Desktop Grid -->
-    <div class="p-6 md:p-12 grid grid-cols-2 md:grid-cols-4 gap-6">
-        <!-- Mac Companion Tile -->
-        <div class="action-card dark-glass col-span-2 row-span-1 md:col-span-1"
-            onclick="openApp('companion', 'Mac Companion')">
-            <div class="flex justify-between items-start">
-                <div class="p-3 rounded-full bg-blue-500 shadow-lg shadow-blue-500/30">
-                    <i class="fas fa-desktop text-xl"></i>
-                </div>
-                <span class="text-xs opacity-60 font-medium">SYSTEM</span>
+            <div class="app-btn" onclick="launch('photos')">
+                <div class="app-icon">📷</div>
+                <div class="app-name">Photos</div>
             </div>
-            <div>
-                <h3 class="text-xl font-semibold">Mac Controls</h3>
-                <div class="status-pill">MacBook Pro</div>
-            </div>
-        </div>
 
-        <!-- Clock Tile -->
-        <div class="action-card glass md:col-span-1" onclick="openApp('clock', 'Clock')">
-            <div class="flex justify-between items-start">
-                <div class="p-3 rounded-full bg-indigo-500 shadow-lg shadow-indigo-500/30">
-                    <i class="fas fa-clock text-xl"></i>
-                </div>
+            <div class="app-btn" onclick="launch('photobooth')">
+                <div class="app-icon">📸</div>
+                <div class="app-name">Photo Booth</div>
             </div>
-            <div>
-                <h3 class="text-lg font-semibold leading-tight">Clock</h3>
-                <p class="text-sm opacity-70">Time & Date</p>
-            </div>
-        </div>
 
-        <!-- Weather Tile -->
-        <div class="action-card dark-glass md:col-span-1" onclick="openApp('weather', 'Weather')">
-            <div class="flex justify-between items-start">
-                <div class="p-3 rounded-full bg-cyan-400 border border-cyan-300">
-                    <i class="fas fa-cloud-sun text-xl"></i>
-                </div>
+            <div class="app-btn" onclick="launch('mail')">
+                <div class="app-icon">✉️</div>
+                <div class="app-name">Mail</div>
             </div>
-            <div>
-                <h3 class="text-lg font-semibold">Weather</h3>
-                <p class="text-xs opacity-60">Forecast</p>
-            </div>
-        </div>
 
-        <!-- Browser Tile -->
-        <div class="action-card glass md:col-span-1" onclick="openApp('browser', 'Safari')">
-            <div class="flex justify-between items-start">
-                <div class="p-3 rounded-full bg-blue-400">
-                    <i class="fas fa-compass text-xl"></i>
-                </div>
+            <div class="app-btn" onclick="launch('messages')">
+                <div class="app-icon">💬</div>
+                <div class="app-name">Messages</div>
             </div>
-            <div>
-                <h3 class="text-lg font-semibold">Safari</h3>
-                <p class="text-sm opacity-70">Web Browser</p>
+
+            <div class="app-btn" onclick="launch('facetime')">
+                <div class="app-icon">📹</div>
+                <div class="app-name">FaceTime</div>
             </div>
-        </div>
-    </div>
 
-    <!-- App Modal -->
-    <div id="overlay" class="overlay" onclick="closeApp()"></div>
-    <div id="modal" class="modal glass" style="display: none;">
-        <div class="p-4 border-b border-white/10 flex justify-between items-center flex-shrink-0">
-            <h2 id="modal-title" class="text-xl font-bold">App</h2>
-            <button onclick="closeApp()"
-                class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-medium transition">Done</button>
-        </div>
-        <div class="modal-content">
-            <iframe id="app-frame" src=""></iframe>
-        </div>
-    </div>
+            <div class="app-btn" onclick="launch('music')">
+                <div class="app-icon">🎵</div>
+                <div class="app-name">Music</div>
+            </div>
 
-    <!-- Dock -->
-    <div class="dock-container glass">
-        <div class="dock-item icon-blue" onclick="openApp('clock', 'Clock')">
-            <i class="fas fa-clock"></i>
-        </div>
-        <div class="dock-item icon-purple" onclick="openApp('weather', 'Weather')">
-            <i class="fas fa-cloud-sun"></i>
-        </div>
-        <div class="dock-item icon-orange" onclick="openApp('browser', 'Safari')">
-            <i class="fas fa-compass"></i>
-        </div>
-        <div class="dock-item icon-green" onclick="openApp('video', 'Video')">
-            <i class="fas fa-play-circle"></i>
-        </div>
-        <div class="dock-item icon-red" onclick="openApp('companion', 'Mac')">
-            <i class="fas fa-desktop"></i>
-        </div>
-        <div class="h-8 w-[1px] bg-white/30 mx-2"></div>
-        <div class="dock-item bg-gray-500/50" onclick="openApp('diagnostics', 'Settings')">
-            <i class="fas fa-cog"></i>
+            <div class="app-btn" onclick="launch('finder')">
+                <div class="app-icon">📂</div>
+                <div class="app-name">Finder</div>
+            </div>
+
+            <div class="app-btn" onclick="launch('terminal')">
+                <div class="app-icon">🖥️</div>
+                <div class="app-name">Terminal</div>
+            </div>
+
+            <div class="app-btn" onclick="launch('calendar')">
+                <div class="app-icon">📅</div>
+                <div class="app-name">Calendar</div>
+            </div>
+
+            <div class="app-btn" onclick="launch('notes')">
+                <div class="app-icon">📝</div>
+                <div class="app-name">Notes</div>
+            </div>
+
+            <div class="app-btn" onclick="launch('maps')">
+                <div class="app-icon">🗺️</div>
+                <div class="app-name">Maps</div>
+            </div>
         </div>
     </div>
 
     <script>
-        function updateClock() {
-            const now = new Date();
-            const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
-            const dateOptions = { month: 'short', day: 'numeric' };
+        function launch(appName) {
+            var macIP = 'anjis-macbook-pro.local'; // Or use localStorage
 
-            document.getElementById('time').textContent = now.toLocaleTimeString('en-US', timeOptions);
-            document.getElementById('date-display').textContent = now.toLocaleDateString('en-US', dateOptions);
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://' + macIP + ':5001/launch/' + appName, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([10, 50, 10]);
+                    }
+                }
+            };
+            xhr.send();
         }
-
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        function openApp(slug, name) {
-            const modal = document.getElementById('modal');
-            const overlay = document.getElementById('overlay');
-            const title = document.getElementById('modal-title');
-            const frame = document.getElementById('app-frame');
-
-            title.textContent = name;
-            frame.src = 'apps/' + slug + '.html';
-
-            modal.style.display = 'block';
-            overlay.style.display = 'block';
-
-            if (navigator.vibrate) {
-                navigator.vibrate(10);
-            }
-        }
-
-        function closeApp() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('app-frame').src = '';
-        }
-
-        window.oncontextmenu = function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
-        };
     </script>
 </body>
 
