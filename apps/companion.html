@@ -246,6 +246,12 @@
     <script>
         var macIP = localStorage.getItem('mac_companion_ip');
 
+        // Auto-detect IP if we are running on the server itself
+        if (!macIP && window.location.hostname !== 'localhost' && window.location.hostname.indexOf('.') !== -1) {
+            macIP = window.location.hostname;
+            localStorage.setItem('mac_companion_ip', macIP);
+        }
+
         function saveIP() {
             var ip = document.getElementById('mac-ip').value;
             if (!ip) return;

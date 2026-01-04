@@ -59,13 +59,32 @@ def launch_app(app_name):
         return jsonify({'status': 'ok'})
     return jsonify({'status': 'error'}), 400
 
+# NEW: Serve the entire iPad Hub locally
+from flask import send_from_directory
+
+@app.route('/')
+def serve_index():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
+
 if __name__ == '__main__':
     # Get local IP for convenience
     import socket
-    hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
-    print(f"\n🚀 Mac Companion Server running!")
-    print(f"🔗 Connect your iPad to: http://{local_ip}:5001")
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('8.8.8.8', 80))
+        local_ip = s.getsockname()[0]
+    except:
+        local_ip = '127.0.0.1'
+    finally:
+        s.close()
+
+    print(f"\n🚀 iPad Hub & Mac Companion Live!")
+    print(f"🔗 Hub Address: http://{local_ip}:5001")
+    print(f"🔑 Use '{local_ip}' in the Companion app settings.")
     print("-------------------------------------------\n")
     
     app.run(host='0.0.0.0', port=5001, debug=False)
