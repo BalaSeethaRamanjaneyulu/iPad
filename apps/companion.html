@@ -307,9 +307,52 @@
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('setup-view').style.display = 'flex';
             document.getElementById('mac-ip').value = '';
+            autoDetectMac(); // Try detection again
         }
 
-        if (macIP) init();
+        // HYBRID AUTO-DETECTION
+        function autoDetectMac() {
+            console.log('🔍 Trying to find Mac automatically...');
+            var testIP = 'anjis-macbook-pro.local';
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://' + testIP + ':5001/stats', true);
+            xhr.timeout = 3000;
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log('✅ Mac detected at home!');
+                    macIP = testIP;
+                    localStorage.setItem('mac_companion_ip', macIP);
+                    init();
+                }
+            };
+
+            xhr.ontimeout = function () {
+                console.log('⏱️ Mac not reachable');
+                showAwayMessage();
+            };
+
+            xhr.onerror = function () {
+                console.log('❌ Mac not found');
+                showAwayMessage();
+            };
+
+            xhr.send();
+        }
+
+        function showAwayMessage() {
+            document.querySelector('#setup-view p').innerHTML =
+                'Mac Companion works when connected to <strong>home WiFi</strong>.<br><br>' +
+                '<span style="color: #ef4444;">Currently: Mac not detected</span><br><br>' +
+                'Or enter your Mac IP manually:';
+        }
+
+        // Start: Try saved IP or auto-detect
+        if (macIP) {
+            init();
+        } else {
+            autoDetectMac();
+        }
     </script>
 </body>
 
