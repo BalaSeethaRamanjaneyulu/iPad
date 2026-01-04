@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Test</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #0f172a;
+            color: #fff;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .box {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px solid #38bdf8;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .good {
+            border-color: #34a853;
+            background: rgba(52, 168, 83, 0.1);
+        }
+
+        .bad {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        h1 {
+            color: #38bdf8;
+        }
+
+        .btn {
+            background: #38bdf8;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔧 Mac Companion Connection Test</h1>
+
+    <div class="box" id="status-box">
+        <h2>Checking your connection...</h2>
+        <p id="status-text">Please wait...</p>
+    </div>
+
+    <div id="instructions" style="display:none;">
+        <h3>✅ Local Server Detected!</h3>
+        <p>You're running on the local server. Mac Companion should work.</p>
+        <button class="btn" onclick="location.href='apps/companion.html'">Open Mac Companion</button>
+    </div>
+
+    <div id="cloudflare-warning" style="display:none;">
+        <div class="box bad">
+            <h3>⚠️ Wrong URL Detected</h3>
+            <p>You're on the <strong>Cloudflare</strong> version.</p>
+            <p>Mac Companion will NOT work here due to security restrictions.</p>
+        </div>
+        <div class="box good">
+            <h3>📝 How to Fix:</h3>
+            <p style="font-size: 14px;">1. Open a new Safari tab on your iPad</p>
+            <p style="font-size: 14px;">2. Type this address:</p>
+            <h2 style="color: #34a853; font-family: monospace;">http://192.168.0.7:5001</h2>
+            <p style="font-size: 12px; color: #94a3b8;">Make sure python3 server.py is running on your Mac!</p>
+        </div>
+    </div>
+
+    <script>
+        var hostname = window.location.hostname;
+        var statusBox = document.getElementById('status-box');
+
+        if (hostname === '192.168.0.7' || hostname === 'localhost' || hostname.startsWith('192.168.')) {
+            // Local server!
+            statusBox.className = 'box good';
+            document.getElementById('status-text').innerHTML = '✅ Connected to LOCAL server<br>Hostname: ' + hostname;
+            document.getElementById('instructions').style.display = 'block';
+        } else {
+            // Cloudflare or other
+            statusBox.className = 'box bad';
+            document.getElementById('status-text').innerHTML = '❌ Wrong server<br>Hostname: ' + hostname;
+            document.getElementById('cloudflare-warning').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

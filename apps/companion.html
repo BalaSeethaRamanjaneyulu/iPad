@@ -303,7 +303,10 @@
 
         function resetConnection() {
             localStorage.removeItem('mac_companion_ip');
-            location.reload();
+            macIP = null;
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('setup-view').style.display = 'flex';
+            document.getElementById('mac-ip').value = '';
         }
 
         if (macIP) init();
