@@ -55,6 +55,28 @@ def media_control(action):
         return jsonify({'status': 'ok'})
     return jsonify({'status': 'error'}), 400
 
+@app.route('/system/<action>')
+def system_control(action):
+    commands = {
+        'sleep': 'tell application "Finder" to sleep',
+        'lock': 'tell application "System Events" to key code 12 using {control down, command down}',
+        'screensaver': 'tell application "System Events" to start screen saver',
+        'mute': 'set volume output muted not (output muted of (get volume settings))',
+        'vol_up': 'set volume output volume (output volume of (get volume settings) + 10)',
+        'vol_down': 'set volume output volume (output volume of (get volume settings) - 10)',
+        'empty_trash': 'tell application "Finder" to empty trash'
+    }
+    
+    if action in commands:
+        script = commands[action]
+        try:
+            subprocess.run(['osascript', '-e', script])
+            return jsonify({'status': 'ok', 'action': action})
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+            
+    return jsonify({'status': 'error', 'message': 'Unknown command'}), 400
+
 @app.route('/launch/<app_name>')
 def launch_app(app_name):
     apps = {

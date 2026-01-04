@@ -56,18 +56,47 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* App Icon Styling */
-        .app-container {
+        /* Updated App Grid with Flexbox for iOS 9 Support */
+        .app-grid {
+            display: -webkit-flex;
             display: flex;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-align-items: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+            overflow-y: auto;
+            height: calc(100vh - 100px);
+            /* Adjust for top bar and padding */
+        }
+
+        .app-container {
+            width: 100px;
+            /* Base width for portrait */
+            margin: 20px 10px;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: column;
             flex-direction: column;
+            -webkit-align-items: center;
             align-items: center;
             gap: 12px;
             cursor: pointer;
+            -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.33, 1, 0.68, 1);
             transition: transform 0.2s cubic-bezier(0.33, 1, 0.68, 1);
         }
 
-        .app-container:active {
-            transform: scale(0.88);
+        /* Landscape / Wider screens adjustments */
+        @media screen and (min-width: 768px) {
+            .app-container {
+                width: 120px;
+                margin: 30px 15px;
+            }
         }
 
         .app-icon {
@@ -155,8 +184,8 @@
     </header>
 
     <!-- Main App Launcher Grid -->
-    <main class="w-full h-full flex items-center justify-center -mt-10 px-10">
-        <div class="grid grid-cols-4 md:grid-cols-5 gap-y-16 gap-x-12 max-w-4xl">
+    <main class="w-full h-full p-4 flex flex-col items-center">
+        <div class="app-grid">
 
             <div class="app-container" onclick="launch('safari')">
                 <div class="app-icon grad-blue">
@@ -263,6 +292,42 @@
                 <span class="app-label">Podcasts</span>
             </div>
 
+            <!-- System Actions -->
+            <div class="app-container" onclick="system('sleep')">
+                <div class="app-icon grad-gray">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <span class="app-label">Sleep</span>
+            </div>
+
+            <div class="app-container" onclick="system('lock')">
+                <div class="app-icon grad-indigo">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <span class="app-label">Lock</span>
+            </div>
+
+            <div class="app-container" onclick="system('screensaver')">
+                <div class="app-icon grad-blue">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <span class="app-label">Saver</span>
+            </div>
+
+            <div class="app-container" onclick="system('mute')">
+                <div class="app-icon grad-red">
+                    <i class="fas fa-volume-mute"></i>
+                </div>
+                <span class="app-label">Mute</span>
+            </div>
+
+            <div class="app-container" onclick="system('empty_trash')">
+                <div class="app-icon grad-gray">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <span class="app-label">Trash</span>
+            </div>
+
         </div>
     </main>
 
@@ -280,9 +345,17 @@
         updateClock();
 
         function launch(appName) {
+            sendRequest('launch/' + appName);
+        }
+
+        function system(action) {
+            sendRequest('system/' + action);
+        }
+
+        function sendRequest(endpoint) {
             // Priority: Local hostname for best reliable house discovery
             var host = 'anjis-macbook-pro.local';
-            var url = 'http://' + host + ':5001/launch/' + appName;
+            var url = 'http://' + host + ':5001/' + endpoint;
 
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
