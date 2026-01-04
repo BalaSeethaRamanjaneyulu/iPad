@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>iPad Hub</title>
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #38bdf8;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #94a3b8;
+            font-size: 18px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .url {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px solid #38bdf8;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-family: monospace;
+            color: #38bdf8;
+            margin: 30px 0;
+        }
+
+        .note {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🚀 iPad Hub - Setup</h1>
+    <p>Open this URL on your iPad Safari to access your Smart Home Hub:</p>
+
+    <div class="url">http://anjis-macbook-pro.local:5001</div>
+
+    <p style="margin-top: 40px;">✅ This URL <strong>never changes</strong><br>
+        📱 Add it to your iPad home screen for instant access<br>
+        🖥️ Mac Companion will auto-connect</p>
+
+    <div class="note">
+        Make sure python3 server.py is running on your Mac<br>
+        Both iPad and Mac must be on the same WiFi network
+    </div>
+</body>
+
+</html>
