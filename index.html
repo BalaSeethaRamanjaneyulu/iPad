@@ -4,153 +4,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Apple Web App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Mac Launcher</title>
+    <meta name="apple-mobile-web-app-title" content="Mac Launch">
+
+    <title>Mac Launcher Pro</title>
+
+    <!-- External Resources -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-blur: blur(25px);
+            --ios-radius: 22.37%;
+            /* Mathematical Squircle Approx */
+        }
+
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #1d4ed8, #7e22ce, #be185d);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            background: #000;
             color: white;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+        /* Dynamic Sonoma Wallpaper */
+        #wallpaper {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, #2e1065 0%, #000 70%),
+                radial-gradient(circle at 80% 80%, #1e3a8a 0%, #000 70%);
+            background-size: cover;
+            z-index: -1;
+            transition: transform 0.5s ease-out;
         }
 
-        .app-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 24px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* App Icon Styling */
+        .app-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.33, 1, 0.68, 1);
         }
 
-        .app-btn:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.25);
+        .app-container:active {
+            transform: scale(0.88);
         }
 
         .app-icon {
-            font-size: 48px;
+            width: 86px;
+            height: 86px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .app-name {
-            font-size: 16px;
+        .app-icon i {
+            font-size: 42px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-label {
+            font-size: 13px;
+            font-weight: 500;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: -0.2px;
+        }
+
+        /* Icon Gradients */
+        .grad-blue {
+            background: linear-gradient(180deg, #5AC8FA 0%, #007AFF 100%);
+        }
+
+        .grad-green {
+            background: linear-gradient(180deg, #4CD964 0%, #28CD41 100%);
+        }
+
+        .grad-orange {
+            background: linear-gradient(180deg, #FF9500 0%, #FF5E3A 100%);
+        }
+
+        .grad-red {
+            background: linear-gradient(180deg, #FF3B30 0%, #FF2D55 100%);
+        }
+
+        .grad-purple {
+            background: linear-gradient(180deg, #AF52DE 0%, #8944AB 100%);
+        }
+
+        .grad-gray {
+            background: linear-gradient(180deg, #8E8E93 0%, #636366 100%);
+        }
+
+        .grad-indigo {
+            background: linear-gradient(180deg, #5856D6 0%, #3F3C9E 100%);
+        }
+
+        .grad-yellow {
+            background: linear-gradient(180deg, #FFCC00 0%, #FFB300 100%);
+        }
+
+        /* Top Bar */
+        #top-bar {
+            height: 40px;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
             font-weight: 600;
         }
     </style>
 </head>
 
 <body>
-    <div class="p-8">
-        <h1 class="text-3xl font-bold mb-8 text-center">Mac App Launcher</h1>
+    <div id="wallpaper"></div>
 
-        <div class="grid grid-cols-3 md:grid-cols-4 gap-6">
-            <div class="app-btn" onclick="launch('safari')">
-                <div class="app-icon">🌐</div>
-                <div class="app-name">Safari</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('photos')">
-                <div class="app-icon">📷</div>
-                <div class="app-name">Photos</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('photobooth')">
-                <div class="app-icon">📸</div>
-                <div class="app-name">Photo Booth</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('mail')">
-                <div class="app-icon">✉️</div>
-                <div class="app-name">Mail</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('messages')">
-                <div class="app-icon">💬</div>
-                <div class="app-name">Messages</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('facetime')">
-                <div class="app-icon">📹</div>
-                <div class="app-name">FaceTime</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('music')">
-                <div class="app-icon">🎵</div>
-                <div class="app-name">Music</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('finder')">
-                <div class="app-icon">📂</div>
-                <div class="app-name">Finder</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('terminal')">
-                <div class="app-icon">🖥️</div>
-                <div class="app-name">Terminal</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('calendar')">
-                <div class="app-icon">📅</div>
-                <div class="app-name">Calendar</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('notes')">
-                <div class="app-icon">📝</div>
-                <div class="app-name">Notes</div>
-            </div>
-
-            <div class="app-btn" onclick="launch('maps')">
-                <div class="app-icon">🗺️</div>
-                <div class="app-name">Maps</div>
-            </div>
+    <!-- Simple Status Bar -->
+    <header id="top-bar">
+        <span> MacBook Pro</span>
+        <span id="clock-display">00:00 AM</span>
+        <div class="flex items-center gap-3">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
         </div>
-    </div>
+    </header>
+
+    <!-- Main App Launcher Grid -->
+    <main class="w-full h-full flex items-center justify-center -mt-10 px-10">
+        <div class="grid grid-cols-4 md:grid-cols-5 gap-y-16 gap-x-12 max-w-4xl">
+
+            <div class="app-container" onclick="launch('safari')">
+                <div class="app-icon grad-blue">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <span class="app-label">Safari</span>
+            </div>
+
+            <div class="app-container" onclick="launch('music')">
+                <div class="app-icon grad-red">
+                    <i class="fas fa-music"></i>
+                </div>
+                <span class="app-label">Music</span>
+            </div>
+
+            <div class="app-container" onclick="launch('photos')">
+                <div class="app-icon grad-orange">
+                    <i class="fas fa-images"></i>
+                </div>
+                <span class="app-label">Photos</span>
+            </div>
+
+            <div class="app-container" onclick="launch('photobooth')">
+                <div class="app-icon grad-purple">
+                    <i class="fas fa-camera-retro"></i>
+                </div>
+                <span class="app-label">Photo Booth</span>
+            </div>
+
+            <div class="app-container" onclick="launch('mail')">
+                <div class="app-icon grad-blue">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <span class="app-label">Mail</span>
+            </div>
+
+            <div class="app-container" onclick="launch('messages')">
+                <div class="app-icon grad-green">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <span class="app-label">Messages</span>
+            </div>
+
+            <div class="app-container" onclick="launch('facetime')">
+                <div class="app-icon grad-green">
+                    <i class="fas fa-video"></i>
+                </div>
+                <span class="app-label">FaceTime</span>
+            </div>
+
+            <div class="app-container" onclick="launch('terminal')">
+                <div class="app-icon grad-gray">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <span class="app-label">Terminal</span>
+            </div>
+
+            <div class="app-container" onclick="launch('finder')">
+                <div class="app-icon grad-indigo">
+                    <i class="fas fa-face-smile"></i>
+                </div>
+                <span class="app-label">Finder</span>
+            </div>
+
+            <div class="app-container" onclick="launch('calendar')">
+                <div class="app-icon grad-red">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <span class="app-label">Calendar</span>
+            </div>
+
+            <div class="app-container" onclick="launch('notes')">
+                <div class="app-icon grad-yellow">
+                    <i class="fas fa-sticky-note"></i>
+                </div>
+                <span class="app-label">Notes</span>
+            </div>
+
+            <div class="app-container" onclick="launch('reminders')">
+                <div class="app-icon grad-orange">
+                    <i class="fas fa-list-ul"></i>
+                </div>
+                <span class="app-label">Reminders</span>
+            </div>
+
+            <div class="app-container" onclick="launch('maps')">
+                <div class="app-icon grad-green">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <span class="app-label">Maps</span>
+            </div>
+
+            <div class="app-container" onclick="launch('tv')">
+                <div class="app-icon grad-blue">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <span class="app-label">TV</span>
+            </div>
+
+            <div class="app-container" onclick="launch('podcasts')">
+                <div class="app-icon grad-purple">
+                    <i class="fas fa-podcast"></i>
+                </div>
+                <span class="app-label">Podcasts</span>
+            </div>
+
+        </div>
+    </main>
 
     <script>
+        function updateClock() {
+            var clock = document.getElementById('clock-display');
+            var now = new Date();
+            clock.innerText = now.toLocaleTimeString([], {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
         function launch(appName) {
-            var macIP = 'anjis-macbook-pro.local'; // Or use localStorage
+            // Priority: Local hostname for best reliable house discovery
+            var host = 'anjis-macbook-pro.local';
+            var url = 'http://' + host + ':5001/launch/' + appName;
 
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://' + macIP + ':5001/launch/' + appName, true);
+            xhr.open('GET', url, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                    if (navigator.vibrate) {
-                        navigator.vibrate([10, 50, 10]);
-                    }
+                    if (navigator.vibrate) navigator.vibrate([20, 30, 20]);
                 }
             };
             xhr.send();
+
+            // Background wallpaper shift for visual feedback
+            document.getElementById('wallpaper').style.transform = 'scale(1.02)';
+            setTimeout(function () {
+                document.getElementById('wallpaper').style.transform = 'scale(1)';
+            }, 200);
         }
+
+        // Prevent typical mobile-jank
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     </script>
 </body>
 
